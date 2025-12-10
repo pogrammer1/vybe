@@ -22,6 +22,7 @@ class VoiceOutput:
     
     def __init__(self, engine_type: str = config.TTS_ENGINE):
         self.engine_type = engine_type
+        self.engine = None  # Initialize to None for all engine types
         
         if engine_type == "pyttsx3":
             self._init_pyttsx3()

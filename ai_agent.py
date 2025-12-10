@@ -74,7 +74,9 @@ class AIAgent:
             # Prepare input with conversation context
             if config.ENABLE_CONTEXT_MEMORY and len(self.conversation_history) > 1:
                 # Include recent conversation history
-                context = " ".join(self.conversation_history[-config.MAX_HISTORY_LENGTH:])
+                # Use the last max_messages to get complete conversation turns
+                max_context_messages = config.MAX_HISTORY_LENGTH * 2
+                context = " ".join(self.conversation_history[-max_context_messages:])
                 input_text = context + self.tokenizer.eos_token
             else:
                 input_text = user_input + self.tokenizer.eos_token
