@@ -65,9 +65,11 @@ class AIAgent:
             if config.ENABLE_CONTEXT_MEMORY:
                 self.conversation_history.append(user_input)
                 
-                # Limit history length
-                if len(self.conversation_history) > config.MAX_HISTORY_LENGTH * 2:
-                    self.conversation_history = self.conversation_history[-config.MAX_HISTORY_LENGTH * 2:]
+                # Limit history length (stores both user input and assistant response)
+                # Each turn = 2 messages (user + assistant), so multiply by 2
+                max_messages = config.MAX_HISTORY_LENGTH * 2
+                if len(self.conversation_history) > max_messages:
+                    self.conversation_history = self.conversation_history[-max_messages:]
             
             # Prepare input with conversation context
             if config.ENABLE_CONTEXT_MEMORY and len(self.conversation_history) > 1:
@@ -128,20 +130,22 @@ class AIAgent:
         Returns:
             Response text
         """
-        user_input = user_input.strip().lower()
+        user_input = user_input.strip()
         
-        # Handle special commands
-        if any(word in user_input for word in ["exit", "quit", "goodbye", "bye"]):
+        # Check for special commands (case-insensitive)
+        user_input_lower = user_input.lower()
+        
+        if any(word in user_input_lower for word in ["exit", "quit", "goodbye", "bye"]):
             return "Goodbye! Have a great day!"
         
-        if "help" in user_input:
+        if "help" in user_input_lower:
             return self._get_help_message()
         
-        if "clear" in user_input or "reset" in user_input:
+        if "clear" in user_input_lower or "reset" in user_input_lower:
             self.clear_history()
             return "I've cleared our conversation history."
         
-        # Generate AI response
+        # Generate AI response (preserve original case for better context)
         response = self.generate_response(user_input)
         return response
     

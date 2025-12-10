@@ -64,7 +64,9 @@ class VoiceInput:
                 language=config.SPEECH_RECOGNITION_LANGUAGE
             )
             
-            return text.lower()
+            # Return original text (case preserved for proper nouns)
+            # Command processing will handle case normalization if needed
+            return text
             
         except sr.WaitTimeoutError:
             print(f"{Fore.RED}No speech detected. Timeout.")
@@ -91,7 +93,8 @@ class VoiceInput:
         
         text = self.listen(prompt=f"{Fore.CYAN}Waiting for wake word...")
         
-        if text and config.WAKE_WORD in text:
+        # Check for wake word (case-insensitive)
+        if text and config.WAKE_WORD.lower() in text.lower():
             print(f"{Fore.GREEN}Wake word detected!")
             return True
         
