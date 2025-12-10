@@ -3,12 +3,18 @@ Text-to-Speech Module
 Handles voice output to the user
 """
 
-import pyttsx3
 from typing import Optional
 import config
 from colorama import Fore, Style, init
 
 init(autoreset=True)
+
+try:
+    import pyttsx3
+    PYTTSX3_AVAILABLE = True
+except ImportError:
+    PYTTSX3_AVAILABLE = False
+    pyttsx3 = None
 
 
 class VoiceOutput:
@@ -26,6 +32,11 @@ class VoiceOutput:
     
     def _init_pyttsx3(self):
         """Initialize pyttsx3 engine"""
+        if not PYTTSX3_AVAILABLE:
+            print(f"{Fore.YELLOW}pyttsx3 not available. Text output only.")
+            self.engine = None
+            return
+        
         try:
             self.engine = pyttsx3.init()
             

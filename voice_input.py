@@ -3,18 +3,30 @@ Speech Recognition Module
 Handles voice input from the user
 """
 
-import speech_recognition as sr
 from typing import Optional
 import config
 from colorama import Fore, Style, init
 
 init(autoreset=True)
 
+try:
+    import speech_recognition as sr
+    SPEECH_RECOGNITION_AVAILABLE = True
+except ImportError:
+    SPEECH_RECOGNITION_AVAILABLE = False
+    sr = None
+
 
 class VoiceInput:
     """Handles speech-to-text conversion"""
     
     def __init__(self):
+        if not SPEECH_RECOGNITION_AVAILABLE:
+            raise ImportError(
+                "speech_recognition not available. "
+                "Install with: pip install SpeechRecognition pyaudio"
+            )
+        
         self.recognizer = sr.Recognizer()
         self.microphone = sr.Microphone()
         
