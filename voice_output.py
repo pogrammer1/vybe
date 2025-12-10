@@ -94,19 +94,25 @@ class VoiceOutput:
             from pydub.playback import play
             
             # Create temporary file
-            with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as fp:
-                temp_file = fp.name
-            
-            # Generate speech
-            tts = gTTS(text=text, lang='en', slow=False)
-            tts.save(temp_file)
-            
-            # Play audio
-            audio = AudioSegment.from_mp3(temp_file)
-            play(audio)
-            
-            # Clean up
-            os.remove(temp_file)
+            temp_file = None
+            try:
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as fp:
+                    temp_file = fp.name
+                
+                # Generate speech
+                tts = gTTS(text=text, lang='en', slow=False)
+                tts.save(temp_file)
+                
+                # Play audio
+                audio = AudioSegment.from_mp3(temp_file)
+                play(audio)
+            finally:
+                # Ensure cleanup even if error occurs
+                if temp_file and os.path.exists(temp_file):
+                    try:
+                        os.remove(temp_file)
+                    except Exception:
+                        pass  # Best effort cleanup
             
         except ImportError:
             print(f"{Fore.RED}gTTS or pydub not available. Install with: pip install gtts pydub")
