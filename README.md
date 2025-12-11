@@ -1,6 +1,6 @@
 # 🎙️ Voice-Activated AI Assistant
 
-A hands-free, voice-controlled AI assistant built with Hugging Face transformers and modern Python libraries. Perfect for everyday tasks, especially when you can't be at your computer (like while driving to work).
+A hands-free, voice-controlled AI assistant built with Hugging Face transformers and modern Python libraries. Perfect for everyday tasks, especially when you can't be at your computer (like while driving to work). Testing vibe code potential/flaws.
 
 ## ✨ Features
 
